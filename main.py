@@ -1,9 +1,7 @@
 import pygame
 import sys
-
-WIDTH, HEIGHT = 800, 600
-FPS = 60
-
+from grid import Grid
+from constants import *
 
 def main():
     pygame.init()
@@ -12,6 +10,8 @@ def main():
     pygame.display.set_caption("Pathfinding Visualizer")
 
     clock = pygame.time.Clock()
+
+    grid = Grid()
 
     running = True
 
@@ -22,13 +22,14 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        screen.fill((255, 255, 255))  # white background
+        screen.fill(BLACK)
+
+        grid.draw(screen)
 
         pygame.display.flip()
 
     pygame.quit()
     sys.exit()
-
 
 if __name__ == "__main__":
     main()

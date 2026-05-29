@@ -1,0 +1,13 @@
+WIDTH = 800
+HEIGHT = 600
+
+ROWS = 20
+COLS = 20
+
+CELL_SIZE = 30
+
+FPS = 60
+
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GRAY = (200, 200, 200)
