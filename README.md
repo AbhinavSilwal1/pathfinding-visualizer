@@ -24,16 +24,29 @@ It focuses on:
 - Real-time rendering
 - Event-driven programming with Pygame
 
-## 🛠 Tech Stack
+## 🛠 Technologies Used
 - Python
 - Pygame
 
-## 📈 Future Improvements
-- Weighted grid customization
-- Diagonal movement option
-- Speed control slider
-- Maze generation algorithms
-- Save/load grid states
+## 📦 How To Run
+Clone the repository:
+```bash
+git clone https://github.com/AbhinavSilwal1/pathfinding-visualizer.git
+cd pathfinding-visualizer
+```
 
-## 🧑‍💻 Author
-Abhinav Silwal
+Create and activate virtual environment:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+Run the project:
+```bash
+python3 main.py
+```
