@@ -7,21 +7,26 @@ class Grid:
         self.cols = COLS
         self.cell_size = CELL_SIZE
 
-        # 0 = empty, 1 = wall
+        # Grid representation; 0 = empty cell, 1 = wall
         self.grid = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
 
+        # Start and end nodes
         self.start = None
         self.end = None
 
+    # Toggles wall state
     def toggle_wall(self, row, col):
         self.grid[row][col] = 1 - self.grid[row][col]
 
+    # Sets start node
     def set_start(self, row, col):
         self.start = (row, col)
 
+    # Sets end node
     def set_end(self, row, col):
         self.end = (row, col)
 
+    # Clears a cell and resets start/end if needed
     def clear_cell(self, row, col):
         self.grid[row][col] = 0
 
@@ -31,12 +36,15 @@ class Grid:
         if self.end == (row, col):
             self.end = None
 
+    # Draws grid
     def draw(self, screen):
         for row in range(self.rows):
             for col in range(self.cols):
+
                 x = col * self.cell_size
                 y = row * self.cell_size
 
+                # Chooses cell color
                 if (row, col) == self.start:
                     color = GREEN
 
@@ -49,12 +57,14 @@ class Grid:
                 else:
                     color = WHITE
 
+                # Draws cell
                 pygame.draw.rect(
                     screen,
                     color,
                     (x, y, self.cell_size, self.cell_size)
                 )
 
+                # Draws grid lines
                 pygame.draw.rect(
                     screen,
                     GRAY,

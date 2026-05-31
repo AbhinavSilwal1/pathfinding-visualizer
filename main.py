@@ -3,6 +3,7 @@ import sys
 from grid import Grid
 from constants import *
 
+# Converts mouse position into grid coordinates
 def get_clicked_pos(pos):
     x, y = pos
     row = y // CELL_SIZE
@@ -12,11 +13,13 @@ def get_clicked_pos(pos):
 def main():
     pygame.init()
 
+    # Creates window
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Pathfinding Visualizer")
 
     clock = pygame.time.Clock()
 
+    # Initializes grid
     grid = Grid()
 
     running = True
@@ -24,11 +27,14 @@ def main():
     while running:
         clock.tick(FPS)
 
+        # Handles events
         for event in pygame.event.get():
+
+            # Quit event
             if event.type == pygame.QUIT:
                 running = False
 
-            # Left Click
+            # Left Click Logic
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos)
@@ -44,7 +50,7 @@ def main():
                     elif (row, col) != grid.start and (row, col) != grid.end:
                         grid.toggle_wall(row, col)
 
-            # Right Click
+            # Right Click Logic
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos)
@@ -52,10 +58,13 @@ def main():
                 if 0 <= row < ROWS and 0 <= col < COLS:
                     grid.clear_cell(row, col)
 
+        # Clears screen
         screen.fill(BLACK)
 
+        # Draws grid
         grid.draw(screen)
 
+        # Updates display
         pygame.display.flip()
 
     pygame.quit()
