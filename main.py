@@ -3,6 +3,12 @@ import sys
 from grid import Grid
 from constants import *
 
+def get_clicked_pos(pos):
+    x, y = pos
+    row = y // CELL_SIZE
+    col = x // CELL_SIZE
+    return row, col
+
 def main():
     pygame.init()
 
@@ -22,8 +28,15 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        screen.fill(BLACK)
+            # LEFT CLICK → toggle wall
+            if pygame.mouse.get_pressed()[0]:
+                pos = pygame.mouse.get_pos()
+                row, col = get_clicked_pos(pos)
 
+                if 0 <= row < ROWS and 0 <= col < COLS:
+                    grid.toggle_wall(row, col)
+
+        screen.fill(BLACK)
         grid.draw(screen)
 
         pygame.display.flip()
