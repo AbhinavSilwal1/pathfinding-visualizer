@@ -1,6 +1,21 @@
 import pygame
 from collections import deque
 
+# Reconstructs the shortest path
+def reconstruct_path(parent, end, start, grid, draw_callback):
+
+    current = end
+
+    while current in parent:
+
+        current = parent[current]
+
+        if current != start:
+            grid.mark_path(current[0], current[1])
+
+        draw_callback()
+        pygame.time.delay(50)
+
 # BFS explores nodes level by level from start
 def bfs(grid, draw_callback):
 
@@ -30,6 +45,7 @@ def bfs(grid, draw_callback):
 
         # Stops if we reach the end
         if current == end:
+            reconstruct_path(parent, end, start, grid, draw_callback)
             break
 
         # Checks neighbors (up, down, left, right)
