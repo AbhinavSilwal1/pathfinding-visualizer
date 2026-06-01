@@ -13,6 +13,7 @@ class Grid:
         # Start and end nodes
         self.start = None
         self.end = None
+        self.visited = set()
 
     # Toggles wall state
     def toggle_wall(self, row, col):
@@ -36,6 +37,10 @@ class Grid:
         if self.end == (row, col):
             self.end = None
 
+    # Marks a node as visited
+    def mark_visited(self, row, col):
+        self.visited.add((row, col))
+
     # Draws grid
     def draw(self, screen):
         for row in range(self.rows):
@@ -50,6 +55,9 @@ class Grid:
 
                 elif (row, col) == self.end:
                     color = RED
+
+                elif (row, col) in self.visited:
+                    color = BLUE
 
                 elif self.grid[row][col] == 1:
                     color = DARK_GRAY

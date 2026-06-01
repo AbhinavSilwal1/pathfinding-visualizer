@@ -25,6 +25,9 @@ def bfs(grid, draw_callback):
         current = queue.popleft()
         row, col = current
 
+        if current != start and current != end:
+            grid.mark_visited(row, col)
+
         # Stops if we reach the end
         if current == end:
             break
