@@ -42,6 +42,7 @@ def draw(screen, grid):
     pygame.display.flip()
     return start_button, reset_button
 
+# Runs BFS animation step-by-step
 def run_bfs(screen, grid):
     for _ in bfs(grid):
         draw(screen, grid)
@@ -50,6 +51,7 @@ def run_bfs(screen, grid):
 def main():
     pygame.init()
 
+    # Initializes window and grid system
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Pathfinding Visualizer")
 
@@ -61,37 +63,46 @@ def main():
     while running:
         clock.tick(FPS)
 
+        # Draws frame and retrieves UI button hitboxes
         start_button, reset_button = draw(screen, grid)
 
+        # Event handling loop
         for event in pygame.event.get():
 
+            # Exit application
             if event.type == pygame.QUIT:
                 running = False
 
+            # Handles left mouse interactions (UI + grid)
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-
                 pos = pygame.mouse.get_pos()
 
+                # UI button interactions first
                 if start_button.collidepoint(pos):
                     run_bfs(screen, grid)
 
                 elif reset_button.collidepoint(pos):
                     grid.reset()
 
+                # Grid interaction (only if not clicking UI)
                 else:
                     row, col = get_clicked_pos(pos)
 
                     if 0 <= row < ROWS and 0 <= col < COLS:
 
+                        # Sets start node first click
                         if grid.start is None:
                             grid.set_start(row, col)
 
+                        # Sets end node second click
                         elif grid.end is None and (row, col) != grid.start:
                             grid.set_end(row, col)
 
+                        # Toggles walls after star/end nodes are set
                         elif (row, col) != grid.start and (row, col) != grid.end:
                             grid.toggle_wall(row, col)
 
+            # Handles right click to clear cells
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos)
