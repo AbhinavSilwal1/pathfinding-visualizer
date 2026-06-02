@@ -15,48 +15,48 @@ def get_clicked_pos(pos):
 def draw_panel(screen):
     panel_rect = pygame.Rect(GRID_WIDTH, 0, PANEL_WIDTH, HEIGHT)
     pygame.draw.rect(screen, BLACK, panel_rect)
-    
+
     # Fonts
     font = pygame.font.SysFont(None, 30)
     small_font = pygame.font.SysFont(None, 24)
-    
+
     # Title
     title = font.render("Controls", True, WHITE)
     screen.blit(title, (GRID_WIDTH + 50, 20))
 
-    # Algorithm Text
+    # Algorithm text
     algorithm_text = small_font.render("Algorithm: BFS", True, WHITE)
     screen.blit(algorithm_text, (GRID_WIDTH + 15, 80))
 
-    # Draws start button
+    # Start button
     start_button = pygame.Rect(GRID_WIDTH + 20, 140, 160, 40)
     pygame.draw.rect(screen, GRAY, start_button)
 
-    # Draws reset button
-    reset_button = pygame.Rect(GRID_WIDTH + 20, 200, 160, 40)
-    pygame.draw.rect(screen, GRAY, reset_button)
-
-    # Start Text
     start_text = small_font.render("Start", True, BLACK)
     screen.blit(start_text, (GRID_WIDTH + 72, 152))
 
-    # Reset Text
+    # Reset button
+    reset_button = pygame.Rect(GRID_WIDTH + 20, 200, 160, 40)
+    pygame.draw.rect(screen, GRAY, reset_button)
+
     reset_text = small_font.render("Reset", True, BLACK)
     screen.blit(reset_text, (GRID_WIDTH + 70, 212))
 
-    # Temporary
+    # Temporary controls text
     controls_text = small_font.render("Space = BFS", True, WHITE)
     screen.blit(controls_text, (GRID_WIDTH + 20, 300))
     clear_text = small_font.render("C = Reset", True, WHITE)
-    screen.blit(clear_text,(GRID_WIDTH + 20, 330))
+    screen.blit(clear_text, (GRID_WIDTH + 20, 330))
+
+    return start_button, reset_button
 
 # Draws the current frame
 def draw(screen, grid):
     screen.fill(BLACK)
-
     grid.draw(screen)
-    draw_panel(screen)
+    start_button, reset_button = draw_panel(screen)
     pygame.display.flip()
+    return start_button, reset_button
 
 def main():
     pygame.init()
@@ -64,7 +64,7 @@ def main():
     # Creates window
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Pathfinding Visualizer")
-
+    
     clock = pygame.time.Clock()
 
     # Initializes grid
@@ -75,6 +75,9 @@ def main():
     while running:
         clock.tick(FPS)
 
+        # Draws frame first
+        start_button, reset_button = draw(screen, grid)
+
         # Handles events
         for event in pygame.event.get():
 
@@ -82,31 +85,32 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-            if event.type == pygame.KEYDOWN:
-                
-                # Runs BFS
-                if event.key == pygame.K_SPACE:
+            # Mouse click handling
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+
+                pos = pygame.mouse.get_pos()
+
+                # Check button clicks first
+                if start_button.collidepoint(pos):
                     bfs(grid, lambda: draw(screen, grid))
 
-                # Resets grid
-                if event.key == pygame.K_c:
+                elif reset_button.collidepoint(pos):
                     grid.reset()
 
-            # Left click logic
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                pos = pygame.mouse.get_pos()
-                row, col = get_clicked_pos(pos)
+                else:
+                    # Grid interaction
+                    row, col = get_clicked_pos(pos)
 
-                if 0 <= row < ROWS and 0 <= col < COLS:
+                    if 0 <= row < ROWS and 0 <= col < COLS:
 
-                    if grid.start is None:
-                        grid.set_start(row, col)
+                        if grid.start is None:
+                            grid.set_start(row, col)
 
-                    elif grid.end is None and (row, col) != grid.start:
-                        grid.set_end(row, col)
+                        elif grid.end is None and (row, col) != grid.start:
+                            grid.set_end(row, col)
 
-                    elif (row, col) != grid.start and (row, col) != grid.end:
-                        grid.toggle_wall(row, col)
+                        elif (row, col) != grid.start and (row, col) != grid.end:
+                            grid.toggle_wall(row, col)
 
             # Right click logic
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
@@ -116,7 +120,16 @@ def main():
                 if 0 <= row < ROWS and 0 <= col < COLS:
                     grid.clear_cell(row, col)
 
-        # Draws current frame
+            # Keyboard shortcuts (temporary)
+            if event.type == pygame.KEYDOWN:
+
+                if event.key == pygame.K_SPACE:
+                    bfs(grid, lambda: draw(screen, grid))
+
+                if event.key == pygame.K_c:
+                    grid.reset()
+
+        # Final render
         draw(screen, grid)
 
     pygame.quit()
