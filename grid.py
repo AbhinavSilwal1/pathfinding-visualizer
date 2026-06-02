@@ -46,6 +46,14 @@ class Grid:
     def mark_path(self, row, col):
         self.path.add((row, col))
 
+    # Resets entire grid state
+    def reset(self):
+        self.grid = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
+        self.start = None
+        self.end = None
+        self.visited.clear()
+        self.path.clear()
+
     # Draws grid
     def draw(self, screen):
         for row in range(self.rows):

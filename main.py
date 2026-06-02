@@ -41,10 +41,14 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-            # Runs BFS
             if event.type == pygame.KEYDOWN:
+                # Runs BFS
                 if event.key == pygame.K_SPACE:
                     bfs(grid, lambda: draw(screen, grid))
+
+                # Resets Grid
+                if event.key == pygame.K_c:
+                    grid.reset()
 
             # Left click logic
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
