@@ -6,6 +6,10 @@ HEIGHT = 600
 ROWS = 20
 COLS = 20
 
+# Control panel dimensions
+PANEL_WIDTH = 200
+GRID_WIDTH = WIDTH - PANEL_WIDTH
+
 # Size of each cell in pixels
 CELL_SIZE = 30
 

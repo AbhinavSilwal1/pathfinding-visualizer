@@ -11,10 +11,51 @@ def get_clicked_pos(pos):
     col = x // CELL_SIZE
     return row, col
 
+# Draws control panel
+def draw_panel(screen):
+    panel_rect = pygame.Rect(GRID_WIDTH, 0, PANEL_WIDTH, HEIGHT)
+    pygame.draw.rect(screen, BLACK, panel_rect)
+    
+    # Fonts
+    font = pygame.font.SysFont(None, 30)
+    small_font = pygame.font.SysFont(None, 24)
+    
+    # Title
+    title = font.render("Controls", True, WHITE)
+    screen.blit(title, (GRID_WIDTH + 50, 20))
+
+    # Algorithm Text
+    algorithm_text = small_font.render("Algorithm: BFS", True, WHITE)
+    screen.blit(algorithm_text, (GRID_WIDTH + 15, 80))
+
+    # Draws start button
+    start_button = pygame.Rect(GRID_WIDTH + 20, 140, 160, 40)
+    pygame.draw.rect(screen, GRAY, start_button)
+
+    # Draws reset button
+    reset_button = pygame.Rect(GRID_WIDTH + 20, 200, 160, 40)
+    pygame.draw.rect(screen, GRAY, reset_button)
+
+    # Start Text
+    start_text = small_font.render("Start", True, BLACK)
+    screen.blit(start_text, (GRID_WIDTH + 72, 152))
+
+    # Reset Text
+    reset_text = small_font.render("Reset", True, BLACK)
+    screen.blit(reset_text, (GRID_WIDTH + 70, 212))
+
+    # Temporary
+    controls_text = small_font.render("Space = BFS", True, WHITE)
+    screen.blit(controls_text, (GRID_WIDTH + 20, 300))
+    clear_text = small_font.render("C = Reset", True, WHITE)
+    screen.blit(clear_text,(GRID_WIDTH + 20, 330))
+
 # Draws the current frame
 def draw(screen, grid):
     screen.fill(BLACK)
+
     grid.draw(screen)
+    draw_panel(screen)
     pygame.display.flip()
 
 def main():
@@ -42,11 +83,12 @@ def main():
                 running = False
 
             if event.type == pygame.KEYDOWN:
+                
                 # Runs BFS
                 if event.key == pygame.K_SPACE:
                     bfs(grid, lambda: draw(screen, grid))
 
-                # Resets Grid
+                # Resets grid
                 if event.key == pygame.K_c:
                     grid.reset()
 
