@@ -10,7 +10,7 @@ def get_clicked_pos(pos):
     return y // CELL_SIZE, x // CELL_SIZE
 
 # Draws control panel and returns button hitboxes
-def draw_panel(screen):
+def draw_panel(screen, selected_algorithm, dropdown_open):
     panel_rect = pygame.Rect(GRID_WIDTH, 0, PANEL_WIDTH, HEIGHT)
     pygame.draw.rect(screen, BLACK, panel_rect)
 
@@ -20,32 +20,59 @@ def draw_panel(screen):
     title = font.render("Controls", True, WHITE)
     screen.blit(title, (GRID_WIDTH + 50, 20))
 
-    algorithm_text = small_font.render("Algorithm: BFS", True, WHITE)
-    screen.blit(algorithm_text, (GRID_WIDTH + 15, 80))
+    # Dropdown menu
+    dropdown_rect = pygame.Rect(GRID_WIDTH + 20, 80, 160, 40)
+    pygame.draw.rect(screen, GRAY, dropdown_rect)
 
-    start_button = pygame.Rect(GRID_WIDTH + 20, 140, 160, 40)
-    reset_button = pygame.Rect(GRID_WIDTH + 20, 200, 160, 40)
+    label = selected_algorithm if selected_algorithm else "<Select Algorithm>"
+    dropdown_text = small_font.render(label, True, BLACK)
+    screen.blit(dropdown_text, (GRID_WIDTH + 22, 92))
+
+    option_rects = []
+
+    if dropdown_open:
+        algorithms = ["BFS", "DFS"]
+
+        for i, algorithm in enumerate(algorithms):
+            rect = pygame.Rect(GRID_WIDTH + 20, 120 + (i * 40), 160, 40)
+
+            pygame.draw.rect(screen, WHITE, rect)
+
+            text = small_font.render(algorithm, True, BLACK)
+            screen.blit(text, (GRID_WIDTH + 40, 132 + (i * 40)))
+
+            option_rects.append((rect, algorithm))
+
+    start_button = pygame.Rect(GRID_WIDTH + 20, 220, 160, 40)
+    reset_button = pygame.Rect(GRID_WIDTH + 20, 280, 160, 40)
 
     pygame.draw.rect(screen, GRAY, start_button)
     pygame.draw.rect(screen, GRAY, reset_button)
 
-    screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 152))
-    screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 212))
+    screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 232))
+    screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 292))
 
-    return start_button, reset_button
+    return start_button, reset_button, dropdown_rect, option_rects
 
 # Draws full frame
-def draw(screen, grid):
+def draw(screen, grid, selected_algorithm, dropdown_open):
     screen.fill(BLACK)
     grid.draw(screen)
-    start_button, reset_button = draw_panel(screen)
+
+    start_button, reset_button, dropdown_rect, option_rects = draw_panel(
+        screen,
+        selected_algorithm,
+        dropdown_open
+    )
+
     pygame.display.flip()
-    return start_button, reset_button
+
+    return start_button, reset_button, dropdown_rect, option_rects
 
 # Runs BFS animation step-by-step
-def run_bfs(screen, grid):
+def run_bfs(screen, grid, selected_algorithm, dropdown_open):
     for _ in bfs(grid):
-        draw(screen, grid)
+        draw(screen, grid, selected_algorithm, dropdown_open)
         pygame.time.delay(30)
 
 def main():
@@ -58,13 +85,21 @@ def main():
     clock = pygame.time.Clock()
     grid = Grid()
 
+    selected_algorithm = None
+    dropdown_open = False
+
     running = True
 
     while running:
         clock.tick(FPS)
 
         # Draws frame and retrieves UI button hitboxes
-        start_button, reset_button = draw(screen, grid)
+        start_button, reset_button, dropdown_rect, option_rects = draw(
+            screen,
+            grid,
+            selected_algorithm,
+            dropdown_open
+        )
 
         # Event handling loop
         for event in pygame.event.get():
@@ -77,12 +112,33 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
 
-                # UI button interactions first
+                # Opens/closes dropdown menu
+                if dropdown_rect.collidepoint(pos):
+                    dropdown_open = not dropdown_open
+
+                # Selects an algorithm
+                else:
+                    for rect, algorithm in option_rects:
+
+                        if rect.collidepoint(pos):
+                            selected_algorithm = algorithm
+                            dropdown_open = False
+
+                # UI button interactions
                 if start_button.collidepoint(pos):
-                    run_bfs(screen, grid)
+
+                    if selected_algorithm == "BFS":
+                        run_bfs(
+                            screen,
+                            grid,
+                            selected_algorithm,
+                            dropdown_open
+                        )
 
                 elif reset_button.collidepoint(pos):
                     grid.reset()
+                    selected_algorithm = None
+                    dropdown_open = False
 
                 # Grid interaction (only if not clicking UI)
                 else:
@@ -98,7 +154,7 @@ def main():
                         elif grid.end is None and (row, col) != grid.start:
                             grid.set_end(row, col)
 
-                        # Toggles walls after star/end nodes are set
+                        # Toggles walls after start/end nodes are set
                         elif (row, col) != grid.start and (row, col) != grid.end:
                             grid.toggle_wall(row, col)
 
@@ -107,7 +163,7 @@ def main():
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos)
 
-                if 0 <= row < ROWS and 0 <= col < ROWS:
+                if 0 <= row < ROWS and 0 <= col < COLS:
                     grid.clear_cell(row, col)
 
     pygame.quit()
