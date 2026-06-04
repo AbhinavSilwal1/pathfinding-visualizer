@@ -3,6 +3,7 @@ import sys
 from grid import Grid
 from constants import *
 from algorithms.bfs import bfs
+from algorithms.dfs import dfs
 
 # Converts mouse position into grid coordinates
 def get_clicked_pos(pos):
@@ -75,6 +76,12 @@ def run_bfs(screen, grid, selected_algorithm, dropdown_open):
         draw(screen, grid, selected_algorithm, dropdown_open)
         pygame.time.delay(30)
 
+# Runs DFS animation step-by-step
+def run_dfs(screen, grid, selected_algorithm, dropdown_open):
+    for _ in dfs(grid):
+        draw(screen, grid, selected_algorithm, dropdown_open)
+        pygame.time.delay(30)
+
 def main():
     pygame.init()
 
@@ -128,12 +135,9 @@ def main():
                 if start_button.collidepoint(pos):
 
                     if selected_algorithm == "BFS":
-                        run_bfs(
-                            screen,
-                            grid,
-                            selected_algorithm,
-                            dropdown_open
-                        )
+                        run_bfs(screen, grid, selected_algorithm, dropdown_open)
+                    elif selected_algorithm == "DFS":
+                        run_dfs(screen, grid, selected_algorithm, dropdown_open)
 
                 elif reset_button.collidepoint(pos):
                     grid.reset()
