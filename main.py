@@ -172,6 +172,22 @@ def main():
                 if 0 <= row < ROWS and 0 <= col < COLS:
                     grid.clear_cell(row, col)
 
+        # Supports click-and-drag wall placement
+        if pygame.mouse.get_pressed()[0]:
+
+            pos = pygame.mouse.get_pos()
+            row, col = get_clicked_pos(pos)
+
+            if 0 <= row < ROWS and 0 <= col < COLS:
+
+                if (
+                    grid.start is not None
+                    and grid.end is not None
+                    and (row, col) != grid.start
+                    and (row, col) != grid.end
+                ):
+                    grid.set_wall(row, col)
+
     pygame.quit()
     sys.exit()
 

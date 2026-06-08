@@ -20,6 +20,10 @@ class Grid:
     def toggle_wall(self, row, col):
         self.grid[row][col] = 1 - self.grid[row][col]
 
+    # Sets a cell as a wall
+    def set_wall(self, row, col):
+        self.grid[row][col] = 1
+
     # Sets start node
     def set_start(self, row, col):
         self.start = (row, col)
