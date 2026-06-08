@@ -46,6 +46,11 @@ class Grid:
     def mark_path(self, row, col):
         self.path.add((row, col))
 
+    # Clears previous algorithm visualization
+    def clear_visualization(self):
+        self.visited.clear()
+        self.path.clear()
+
     # Resets entire grid state
     def reset(self):
         self.grid = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
