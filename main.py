@@ -4,6 +4,7 @@ from grid import Grid
 from constants import *
 from algorithms.bfs import bfs
 from algorithms.dfs import dfs
+from algorithms.dijkstra import dijkstra
 
 # Converts mouse position into grid coordinates
 def get_clicked_pos(pos):
@@ -32,7 +33,7 @@ def draw_panel(screen, selected_algorithm, dropdown_open):
     option_rects = []
 
     if dropdown_open:
-        algorithms = ["BFS", "DFS"]
+        algorithms = ["BFS", "DFS", "Dijkstra"]
 
         for i, algorithm in enumerate(algorithms):
             rect = pygame.Rect(GRID_WIDTH + 20, 120 + (i * 40), 160, 40)
@@ -81,6 +82,12 @@ def run_bfs(screen, grid, selected_algorithm, dropdown_open):
 def run_dfs(screen, grid, selected_algorithm, dropdown_open):
     grid.clear_visualization()
     for _ in dfs(grid):
+        draw(screen, grid, selected_algorithm, dropdown_open)
+        pygame.time.delay(30)
+
+# Runs Dijkstra animation step-by-step
+def run_dijkstra(screen, grid, selected_algorithm, dropdown_open):
+    for _ in dijkstra(grid):
         draw(screen, grid, selected_algorithm, dropdown_open)
         pygame.time.delay(30)
 
@@ -140,6 +147,8 @@ def main():
                         run_bfs(screen, grid, selected_algorithm, dropdown_open)
                     elif selected_algorithm == "DFS":
                         run_dfs(screen, grid, selected_algorithm, dropdown_open)
+                    elif selected_algorithm == "Dijkstra":
+                        run_dijkstra(screen, grid, selected_algorithm, dropdown_open)
 
                 elif reset_button.collidepoint(pos):
                     grid.reset()
