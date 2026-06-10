@@ -87,6 +87,7 @@ def run_dfs(screen, grid, selected_algorithm, dropdown_open):
 
 # Runs Dijkstra animation step-by-step
 def run_dijkstra(screen, grid, selected_algorithm, dropdown_open):
+    grid.clear_visualization()
     for _ in dijkstra(grid):
         draw(screen, grid, selected_algorithm, dropdown_open)
         pygame.time.delay(30)
