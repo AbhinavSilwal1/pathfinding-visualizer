@@ -16,6 +16,11 @@ CELL_SIZE = 30
 # Frame rate control
 FPS = 60
 
+# Animation speed limits (milliseconds)
+MIN_DELAY = 5
+MAX_DELAY = 100
+DEFAULT_DELAY = 30
+
 # Colors (RGB values)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

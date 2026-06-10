@@ -1,8 +1,8 @@
 import pygame
 from constants import *
 
-# Draws control panel and returns button hitboxes
-def draw_panel(screen, selected_algorithm, dropdown_open):
+# Draws control panel and returns UI hitboxes
+def draw_panel(screen, selected_algorithm, dropdown_open, slider_x):
     panel_rect = pygame.Rect(GRID_WIDTH, 0, PANEL_WIDTH, HEIGHT)
     pygame.draw.rect(screen, BLACK, panel_rect)
 
@@ -27,7 +27,7 @@ def draw_panel(screen, selected_algorithm, dropdown_open):
 
         for i, algorithm in enumerate(algorithms):
             rect = pygame.Rect(GRID_WIDTH + 20, 130 + (i * 45), 160, 40)
-            
+
             pygame.draw.rect(screen, WHITE, rect)
 
             text = small_font.render(algorithm, True, BLACK)
@@ -35,28 +35,34 @@ def draw_panel(screen, selected_algorithm, dropdown_open):
 
             option_rects.append((rect, algorithm))
 
-    start_button = pygame.Rect(GRID_WIDTH + 20, 350, 160, 40)
-    reset_button = pygame.Rect(GRID_WIDTH + 20, 410, 160, 40)
+    # Speed slider
+    speed_text = small_font.render("Speed", True, WHITE)
+    screen.blit(speed_text, (GRID_WIDTH + 20, 320))
+
+    slider_rect = pygame.Rect(GRID_WIDTH + 20, 350, 160, 6)
+    pygame.draw.rect(screen, WHITE, slider_rect)
+
+    knob_rect = pygame.Rect(slider_x - 6, 343, 12, 20)
+    pygame.draw.rect(screen, GRAY, knob_rect)
+
+    start_button = pygame.Rect(GRID_WIDTH + 20, 390, 160, 40)
+    reset_button = pygame.Rect(GRID_WIDTH + 20, 450, 160, 40)
 
     pygame.draw.rect(screen, GRAY, start_button)
     pygame.draw.rect(screen, GRAY, reset_button)
 
-    screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 362))
-    screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 422))
+    screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 402))
+    screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 462))
 
-    return start_button, reset_button, dropdown_rect, option_rects
+    return start_button, reset_button, dropdown_rect, option_rects, slider_rect, knob_rect
 
 # Draws full frame
-def draw(screen, grid, selected_algorithm, dropdown_open):
+def draw(screen, grid, selected_algorithm, dropdown_open, slider_x):
     screen.fill(BLACK)
     grid.draw(screen)
 
-    start_button, reset_button, dropdown_rect, option_rects = draw_panel(
-        screen, 
-        selected_algorithm, 
-        dropdown_open
-    )
+    ui_elements = draw_panel(screen, selected_algorithm, dropdown_open, slider_x)
 
     pygame.display.flip()
 
-    return start_button, reset_button, dropdown_rect, option_rects
+    return ui_elements

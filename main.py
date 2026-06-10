@@ -14,32 +14,32 @@ def get_clicked_pos(pos):
     return y // CELL_SIZE, x // CELL_SIZE
 
 # Runs BFS animation step-by-step
-def run_bfs(screen, grid, selected_algorithm, dropdown_open):
+def run_bfs(screen, grid, selected_algorithm, dropdown_open, slider_x, delay):
     grid.clear_visualization()
     for _ in bfs(grid):
-        draw(screen, grid, selected_algorithm, dropdown_open)
-        pygame.time.delay(30)
+        draw(screen, grid, selected_algorithm, dropdown_open, slider_x)
+        pygame.time.delay(delay)
 
 # Runs DFS animation step-by-step
-def run_dfs(screen, grid, selected_algorithm, dropdown_open):
+def run_dfs(screen, grid, selected_algorithm, dropdown_open, slider_x, delay):
     grid.clear_visualization()
     for _ in dfs(grid):
-        draw(screen, grid, selected_algorithm, dropdown_open)
-        pygame.time.delay(30)
+        draw(screen, grid, selected_algorithm, dropdown_open, slider_x)
+        pygame.time.delay(delay)
 
 # Runs Dijkstra animation step-by-step
-def run_dijkstra(screen, grid, selected_algorithm, dropdown_open):
+def run_dijkstra(screen, grid, selected_algorithm, dropdown_open, slider_x, delay):
     grid.clear_visualization()
     for _ in dijkstra(grid):
-        draw(screen, grid, selected_algorithm, dropdown_open)
-        pygame.time.delay(30)
+        draw(screen, grid, selected_algorithm, dropdown_open, slider_x)
+        pygame.time.delay(delay)
 
 # Runs A* animation step-by-step
-def run_astar(screen, grid, selected_algorithm, dropdown_open):
+def run_astar(screen, grid, selected_algorithm, dropdown_open, slider_x, delay):
     grid.clear_visualization()
     for _ in astar(grid):
-        draw(screen, grid, selected_algorithm, dropdown_open)
-        pygame.time.delay(30)
+        draw(screen, grid, selected_algorithm, dropdown_open, slider_x)
+        pygame.time.delay(delay)
 
 def main():
     pygame.init()
@@ -54,17 +54,22 @@ def main():
     selected_algorithm = None
     dropdown_open = False
 
+    slider_x = GRID_WIDTH + 100
+    dragging_slider = False
+    animation_delay = DEFAULT_DELAY
+
     running = True
 
     while running:
         clock.tick(FPS)
 
         # Draws frame and retrieves UI button hitboxes
-        start_button, reset_button, dropdown_rect, option_rects = draw(
-            screen,
-            grid,
-            selected_algorithm,
-            dropdown_open
+        start_button, reset_button, dropdown_rect, option_rects, slider_rect, knob_rect = draw(
+            screen, 
+            grid, 
+            selected_algorithm, 
+            dropdown_open,
+            slider_x
         )
 
         # Event handling loop
@@ -78,8 +83,12 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
 
+                # Starts dragging speed slider
+                if knob_rect.collidepoint(pos):
+                    dragging_slider = True
+
                 # Opens/closes dropdown menu
-                if dropdown_rect.collidepoint(pos):
+                elif dropdown_rect.collidepoint(pos):
                     dropdown_open = not dropdown_open
 
                 # Selects an algorithm
@@ -92,20 +101,24 @@ def main():
 
                 # UI button interactions
                 if start_button.collidepoint(pos):
-
+                    
                     if selected_algorithm == "BFS":
-                        run_bfs(screen, grid, selected_algorithm, dropdown_open)
+                        run_bfs(screen, grid, selected_algorithm, dropdown_open, slider_x, animation_delay)
                     elif selected_algorithm == "DFS":
-                        run_dfs(screen, grid, selected_algorithm, dropdown_open)
+                        run_dfs(screen, grid, selected_algorithm, dropdown_open, slider_x, animation_delay)
                     elif selected_algorithm == "Dijkstra":
-                        run_dijkstra(screen, grid, selected_algorithm, dropdown_open)
+                        run_dijkstra(screen, grid, selected_algorithm, dropdown_open, slider_x, animation_delay)
                     elif selected_algorithm == "A*":
-                        run_astar(screen, grid, selected_algorithm, dropdown_open)
+                        run_astar(screen, grid, selected_algorithm, dropdown_open, slider_x,animation_delay)
 
                 elif reset_button.collidepoint(pos):
                     grid.reset()
                     selected_algorithm = None
                     dropdown_open = False
+
+                    slider_x = GRID_WIDTH + 100
+                    dragging_slider = False
+                    animation_delay = DEFAULT_DELAY
 
                 # Grid interaction (only if not clicking UI)
                 else:
@@ -133,6 +146,16 @@ def main():
                 if 0 <= row < ROWS and 0 <= col < COLS:
                     grid.clear_cell(row, col)
 
+            # Stops dragging slider
+            if event.type == pygame.MOUSEBUTTONUP:
+                dragging_slider = False
+
+            # Updates slider position while dragging
+            if event.type == pygame.MOUSEMOTION and dragging_slider:
+                slider_x = max(slider_rect.left, min(event.pos[0], slider_rect.right))
+                percentage = ((slider_x - slider_rect.left) / slider_rect.width)
+                animation_delay = int(MAX_DELAY - percentage * (MAX_DELAY - MIN_DELAY))
+
         # Supports click-and-drag wall placement
         if pygame.mouse.get_pressed()[0]:
 
@@ -141,12 +164,7 @@ def main():
 
             if 0 <= row < ROWS and 0 <= col < COLS:
 
-                if (
-                    grid.start is not None
-                    and grid.end is not None
-                    and (row, col) != grid.start
-                    and (row, col) != grid.end
-                ):
+                if (grid.start is not None and grid.end is not None and (row, col) != grid.start and (row, col) != grid.end):
                     grid.set_wall(row, col)
 
     pygame.quit()
