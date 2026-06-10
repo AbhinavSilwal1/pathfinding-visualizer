@@ -5,6 +5,7 @@ from constants import *
 from algorithms.bfs import bfs
 from algorithms.dfs import dfs
 from algorithms.dijkstra import dijkstra
+from algorithms.a_star import astar
 
 # Converts mouse position into grid coordinates
 def get_clicked_pos(pos):
@@ -33,7 +34,7 @@ def draw_panel(screen, selected_algorithm, dropdown_open):
     option_rects = []
 
     if dropdown_open:
-        algorithms = ["BFS", "DFS", "Dijkstra"]
+        algorithms = ["BFS", "DFS", "Dijkstra", "A*"]
 
         for i, algorithm in enumerate(algorithms):
             rect = pygame.Rect(GRID_WIDTH + 20, 130 + (i * 45), 160, 40)
@@ -45,14 +46,14 @@ def draw_panel(screen, selected_algorithm, dropdown_open):
 
             option_rects.append((rect, algorithm))
 
-    start_button = pygame.Rect(GRID_WIDTH + 20, 300, 160, 40)
-    reset_button = pygame.Rect(GRID_WIDTH + 20, 360, 160, 40)
+    start_button = pygame.Rect(GRID_WIDTH + 20, 350, 160, 40)
+    reset_button = pygame.Rect(GRID_WIDTH + 20, 410, 160, 40)
 
     pygame.draw.rect(screen, GRAY, start_button)
     pygame.draw.rect(screen, GRAY, reset_button)
 
-    screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 312))
-    screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 372))
+    screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 362))
+    screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 422))
 
     return start_button, reset_button, dropdown_rect, option_rects
 
@@ -89,6 +90,13 @@ def run_dfs(screen, grid, selected_algorithm, dropdown_open):
 def run_dijkstra(screen, grid, selected_algorithm, dropdown_open):
     grid.clear_visualization()
     for _ in dijkstra(grid):
+        draw(screen, grid, selected_algorithm, dropdown_open)
+        pygame.time.delay(30)
+
+# Runs A* animation step-by-step
+def run_astar(screen, grid, selected_algorithm, dropdown_open):
+    grid.clear_visualization()
+    for _ in astar(grid):
         draw(screen, grid, selected_algorithm, dropdown_open)
         pygame.time.delay(30)
 
@@ -150,6 +158,8 @@ def main():
                         run_dfs(screen, grid, selected_algorithm, dropdown_open)
                     elif selected_algorithm == "Dijkstra":
                         run_dijkstra(screen, grid, selected_algorithm, dropdown_open)
+                    elif selected_algorithm == "A*":
+                        run_astar(screen, grid, selected_algorithm, dropdown_open)
 
                 elif reset_button.collidepoint(pos):
                     grid.reset()
