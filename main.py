@@ -36,23 +36,23 @@ def draw_panel(screen, selected_algorithm, dropdown_open):
         algorithms = ["BFS", "DFS", "Dijkstra"]
 
         for i, algorithm in enumerate(algorithms):
-            rect = pygame.Rect(GRID_WIDTH + 20, 120 + (i * 40), 160, 40)
+            rect = pygame.Rect(GRID_WIDTH + 20, 130 + (i * 45), 160, 40)
 
             pygame.draw.rect(screen, WHITE, rect)
 
             text = small_font.render(algorithm, True, BLACK)
-            screen.blit(text, (GRID_WIDTH + 40, 132 + (i * 40)))
+            screen.blit(text, (GRID_WIDTH + 40, 142 + (i * 45)))
 
             option_rects.append((rect, algorithm))
 
-    start_button = pygame.Rect(GRID_WIDTH + 20, 220, 160, 40)
-    reset_button = pygame.Rect(GRID_WIDTH + 20, 280, 160, 40)
+    start_button = pygame.Rect(GRID_WIDTH + 20, 300, 160, 40)
+    reset_button = pygame.Rect(GRID_WIDTH + 20, 360, 160, 40)
 
     pygame.draw.rect(screen, GRAY, start_button)
     pygame.draw.rect(screen, GRAY, reset_button)
 
-    screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 232))
-    screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 292))
+    screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 312))
+    screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 372))
 
     return start_button, reset_button, dropdown_rect, option_rects
 
