@@ -85,7 +85,7 @@ class Grid:
             for col in range(self.cols):
 
                 x = col * self.cell_size
-                y = row * self.cell_size
+                y = row * self.cell_size + GRID_Y_OFFSET
 
                 # Chooses cell color
                 if (row, col) == self.start:

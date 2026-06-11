@@ -7,11 +7,12 @@ from algorithms.bfs import bfs
 from algorithms.dfs import dfs
 from algorithms.dijkstra import dijkstra
 from algorithms.a_star import astar
+from algorithms.maze import generate_maze
 
 # Converts mouse position into grid coordinates
 def get_clicked_pos(pos):
     x, y = pos
-    return y // CELL_SIZE, x // CELL_SIZE
+    return (y - GRID_Y_OFFSET) // CELL_SIZE, x // CELL_SIZE
 
 # Runs BFS animation step-by-step
 def run_bfs(screen, grid, selected_algorithm, dropdown_open, slider_x, delay):
@@ -41,6 +42,13 @@ def run_astar(screen, grid, selected_algorithm, dropdown_open, slider_x, delay):
         draw(screen, grid, selected_algorithm, dropdown_open, slider_x)
         pygame.time.delay(delay)
 
+# Runs Maze generation
+def run_maze(screen, grid, selected_algorithm, dropdown_open, slider_x, delay):
+    grid.clear_visualization()
+    generate_maze(grid)
+    draw(screen, grid, selected_algorithm, dropdown_open, slider_x)
+    pygame.time.delay(delay)
+
 def main():
     pygame.init()
 
@@ -64,7 +72,7 @@ def main():
         clock.tick(FPS)
 
         # Draws frame and retrieves UI button hitboxes
-        start_button, reset_button, dropdown_rect, option_rects, slider_rect, knob_rect = draw(
+        start_button, reset_button, maze_button, dropdown_rect, option_rects, slider_rect, knob_rect = draw(
             screen, 
             grid, 
             selected_algorithm, 
@@ -109,7 +117,10 @@ def main():
                     elif selected_algorithm == "Dijkstra":
                         run_dijkstra(screen, grid, selected_algorithm, dropdown_open, slider_x, animation_delay)
                     elif selected_algorithm == "A*":
-                        run_astar(screen, grid, selected_algorithm, dropdown_open, slider_x,animation_delay)
+                        run_astar(screen, grid, selected_algorithm, dropdown_open, slider_x, animation_delay)
+
+                elif maze_button.collidepoint(pos):
+                    run_maze(screen, grid, selected_algorithm, dropdown_open, slider_x, animation_delay)
 
                 elif reset_button.collidepoint(pos):
                     grid.reset()

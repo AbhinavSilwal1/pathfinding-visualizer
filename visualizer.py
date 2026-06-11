@@ -55,16 +55,20 @@ def draw_panel(screen, grid, selected_algorithm, dropdown_open, slider_x):
     path_text = small_font.render(f"Path Length: {grid.path_length}", True, WHITE)
     screen.blit(path_text, (GRID_WIDTH + 20, 440))
 
+    # Buttons
     start_button = pygame.Rect(GRID_WIDTH + 20, 490, 160, 40)
     reset_button = pygame.Rect(GRID_WIDTH + 20, 550, 160, 40)
+    maze_button = pygame.Rect(GRID_WIDTH + 20, 610, 160, 40)
 
     pygame.draw.rect(screen, GRAY, start_button)
     pygame.draw.rect(screen, GRAY, reset_button)
+    pygame.draw.rect(screen, GRAY, maze_button)
 
     screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 502))
     screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 562))
+    screen.blit(small_font.render("Maze", True, BLACK), (GRID_WIDTH + 72, 622))
 
-    return start_button, reset_button, dropdown_rect, option_rects, slider_rect, knob_rect
+    return start_button, reset_button, maze_button, dropdown_rect, option_rects, slider_rect, knob_rect
 
 # Draws full frame
 def draw(screen, grid, selected_algorithm, dropdown_open, slider_x):

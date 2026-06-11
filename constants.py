@@ -1,6 +1,6 @@
 # Window dimensions
 WIDTH = 800
-HEIGHT = 600
+HEIGHT = 700
 
 # Grid size (number of rows and columns)
 ROWS = 20
@@ -12,6 +12,7 @@ GRID_WIDTH = WIDTH - PANEL_WIDTH
 
 # Size of each cell in pixels
 CELL_SIZE = 30
+GRID_Y_OFFSET = (HEIGHT - ROWS * CELL_SIZE) // 2
 
 # Frame rate control
 FPS = 60
