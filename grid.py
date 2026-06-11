@@ -16,6 +16,10 @@ class Grid:
         self.visited = set()
         self.path = set()
 
+        # Statistics
+        self.visited_count = 0
+        self.path_length = 0
+
     # Toggles wall state
     def toggle_wall(self, row, col):
         self.grid[row][col] = 1 - self.grid[row][col]
@@ -44,24 +48,36 @@ class Grid:
 
     # Marks a node as visited
     def mark_visited(self, row, col):
-        self.visited.add((row, col))
+        if (row, col) not in self.visited:
+            self.visited.add((row, col))
+            self.visited_count += 1
 
     # Marks a node as part of the path
     def mark_path(self, row, col):
-        self.path.add((row, col))
+        if (row, col) not in self.path:
+            self.path.add((row, col))
+            self.path_length += 1
 
     # Clears previous algorithm visualization
     def clear_visualization(self):
         self.visited.clear()
         self.path.clear()
 
+        self.visited_count = 0
+        self.path_length = 0
+
     # Resets entire grid state
     def reset(self):
         self.grid = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
+
         self.start = None
         self.end = None
+
         self.visited.clear()
         self.path.clear()
+
+        self.visited_count = 0
+        self.path_length = 0
 
     # Draws grid
     def draw(self, screen):
@@ -74,19 +90,14 @@ class Grid:
                 # Chooses cell color
                 if (row, col) == self.start:
                     color = GREEN
-
                 elif (row, col) == self.end:
                     color = RED
-
                 elif (row, col) in self.path:
                     color = YELLOW
-
                 elif (row, col) in self.visited:
                     color = BLUE
-
                 elif self.grid[row][col] == 1:
                     color = DARK_GRAY
-
                 else:
                     color = WHITE
 

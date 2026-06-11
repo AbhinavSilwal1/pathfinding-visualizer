@@ -2,7 +2,7 @@ import pygame
 from constants import *
 
 # Draws control panel and returns UI hitboxes
-def draw_panel(screen, selected_algorithm, dropdown_open, slider_x):
+def draw_panel(screen, grid, selected_algorithm, dropdown_open, slider_x):
     panel_rect = pygame.Rect(GRID_WIDTH, 0, PANEL_WIDTH, HEIGHT)
     pygame.draw.rect(screen, BLACK, panel_rect)
 
@@ -45,14 +45,24 @@ def draw_panel(screen, selected_algorithm, dropdown_open, slider_x):
     knob_rect = pygame.Rect(slider_x - 6, 343, 12, 20)
     pygame.draw.rect(screen, GRAY, knob_rect)
 
-    start_button = pygame.Rect(GRID_WIDTH + 20, 390, 160, 40)
-    reset_button = pygame.Rect(GRID_WIDTH + 20, 450, 160, 40)
+    # Statistics panel
+    stats_title = small_font.render("Statistics", True, WHITE)
+    screen.blit(stats_title, (GRID_WIDTH + 20, 380))
+
+    visited_text = small_font.render(f"Visited: {grid.visited_count}", True, WHITE)
+    screen.blit(visited_text, (GRID_WIDTH + 20, 410))
+
+    path_text = small_font.render(f"Path Length: {grid.path_length}", True, WHITE)
+    screen.blit(path_text, (GRID_WIDTH + 20, 440))
+
+    start_button = pygame.Rect(GRID_WIDTH + 20, 490, 160, 40)
+    reset_button = pygame.Rect(GRID_WIDTH + 20, 550, 160, 40)
 
     pygame.draw.rect(screen, GRAY, start_button)
     pygame.draw.rect(screen, GRAY, reset_button)
 
-    screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 402))
-    screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 462))
+    screen.blit(small_font.render("Start", True, BLACK), (GRID_WIDTH + 72, 502))
+    screen.blit(small_font.render("Reset", True, BLACK), (GRID_WIDTH + 70, 562))
 
     return start_button, reset_button, dropdown_rect, option_rects, slider_rect, knob_rect
 
@@ -61,7 +71,7 @@ def draw(screen, grid, selected_algorithm, dropdown_open, slider_x):
     screen.fill(BLACK)
     grid.draw(screen)
 
-    ui_elements = draw_panel(screen, selected_algorithm, dropdown_open, slider_x)
+    ui_elements = draw_panel(screen, grid, selected_algorithm, dropdown_open, slider_x)
 
     pygame.display.flip()
 
