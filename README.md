@@ -2,19 +2,32 @@
 
 Interactive pathfinding visualizer built with Python and Pygame, featuring real-time animation of BFS, DFS, Dijkstra, and A* algorithms on a dynamic grid.
 
-## 🚀 Features (Planned)
-- Interactive grid-based interface
-- Wall placement system
+## 🚀 Features
+- Interactive 20x20 grid-based interface
+- Start node and end node placement
+- Left-click wall creation
+- Click-and-drag wall placement
+- Right-click cell clearing
+- Random maze generation
+- Algorithm selection dropdown
+- Adjustable animation speed slider
+- Real-time statistics panel
+  - Visited nodes count
+  - Path length count
 - Visualized pathfinding algorithms:
   - Breadth-First Search (BFS)
   - Depth-First Search (DFS)
   - Dijkstra’s Algorithm
   - A* Search
 - Real-time step-by-step animation
-- Clear visualization of:
-  - Visited nodes
-  - Frontier nodes
-  - Final shortest path
+- Automatic path reconstruction
+- Color-coded visualization:
+  - Start node (Green)
+  - End node (Red)
+  - Visited nodes (Blue)
+  - Final path (Yellow)
+  - Walls (Dark Gray)
+- Reset functionality
 
 ## 🧠 Purpose
 This project is built to strengthen understanding of graph algorithms and visualization techniques through an interactive and graphical approach.
